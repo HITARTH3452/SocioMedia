@@ -8,8 +8,11 @@ import dotenv from "dotenv";
 import helmet from "helmet";
 import path from "path";
 import { fileURLToPath } from "url";
-import authRouter from './router/authRouter.js';
-import { signup } from './controller/auth.js';
+import authRouter from "./router/authRouter.js";
+import userRouter from './router/userRouter.js';
+// import postRoutes from './router/postRoute.js'
+import { signup } from "./controller/auth.js";
+
 
 // Configurations
 
@@ -53,11 +56,13 @@ mongoose
     console.log("database connection error_" + error);
   });
 
-
 //routes with image upload fn
-app.use('/auth/signup', upload.single('picture') , signup);
+app.use("/auth/signup", upload.single("picture"), signup);
 
 //ROUTE
-app.use('/auth' , authRouter)
+app.use("/auth", authRouter);
+app.use('/users', userRouter);
+// app.use('/posts' , postRoutes);
+
 
 app.listen(PORT, () => console.log(`Server is running on ${PORT}`));

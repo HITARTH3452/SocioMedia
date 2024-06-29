@@ -7,7 +7,7 @@ const UserSchema = mongoose.Schema({
         min : 5,
         max : 50
     },
-    lasttName : {
+    lastName : {
         type : String,
         require : true,
         min : 5,
@@ -17,12 +17,6 @@ const UserSchema = mongoose.Schema({
         type : String,
         require : true,
         unique : true,
-        min : 5,
-        max : 50
-    },
-    password : {
-        type : String,
-        require : true,
         min : 5,
         max : 50
     },
