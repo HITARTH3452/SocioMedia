@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import User from "../models/User.js";
 
 //Read
@@ -15,11 +16,30 @@ export const getUser = async (req, res) => {
 export const getUserFriends = async (req, res) => {
   try {
     const { id } = req.params;
+
+    // Validate the id parameter
+    if(!mongoose.Types.ObjectId.isValid(id)){
+      return res.status(400).json({message : "Invalid user ID format"});
+    }
+
     const user = await User.findById(id);
 
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
     const friends = await Promise.all(
-      user.friends.map((id) => User.findById(id))
+       user.friends.map((friendId) => {
+        // Validate each friend's id
+        if (mongoose.Types.ObjectId.isValid(friendId)) {
+          return User.findById(friendId);
+        }
+        return null;
+      })
     );
+
+     // Filter out any null values resulting from invalid friend IDs
+    const validFriends = friends.filter((friend) => friend !== null);
 
     const formattedFriends = friends.map(
       ({ _id, firstName, lastName, occupation, location, picturePath }) => {
